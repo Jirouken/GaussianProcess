@@ -126,3 +126,13 @@ class Regression(object):
         self.sigma_n2 = sigma_n2
         self.sigma_f2 = sigma_f2
         self.hyper_params = [beta, sigma_n2, sigma_f2]
+
+    def sample_from_prior(self, test_X, size):
+        """
+        GP事前分布からのサンプリング
+        """
+        infr = Inference(self.beta, self.sigma_n2, self.sigma_f2)
+        K_tt = infr._cov(test_X, test_X)
+        f_mean = np.zeros(len(test_X))
+        samples = np.random.multivariate_normal(f_mean, K_tt, size)
+        return samples
